@@ -60,3 +60,15 @@ img { display: block; }
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--cream); }
 ::-webkit-scrollbar-thumb { background: var(--blush-light); border-radius: 3px; }
+
+@media (max-width: 768px) {
+  /* Esconde menu desktop */
+  nav ul {
+    display: none !important;
+  }
+
+  /* Mostra hamburguer */
+  nav button[aria-label="menu"] {
+    display: flex !important;
+  }
+}

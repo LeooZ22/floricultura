@@ -341,6 +341,7 @@ function Field({ label, children }) {
       {children}
     </div>
   )
+  
 }
 
 const s = {
@@ -395,6 +396,8 @@ const s = {
     border: '1px solid var(--border)',
     borderRadius: 'var(--radius-lg)',
     overflow: 'hidden',
+    overflowX: 'auto',   // já tem, mas confirme
+    WebkitOverflowScrolling: 'touch', // scroll suave no iOS
   },
   table: { width: '100%', borderCollapse: 'collapse' },
   th: {

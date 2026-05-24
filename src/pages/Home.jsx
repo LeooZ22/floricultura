@@ -72,7 +72,25 @@ function Home() {
       {howOpen && <HowItWorksModal onClose={() => setHowOpen(false)} />}
     </main>
   )
+
+  modal: {
+  // já existente...
+  maxWidth: '540px',
+  
+  // adicione:
+  margin: '0',           // remove margem lateral
+  borderRadius: window.innerWidth < 768 ? '16px 16px 0 0' : 'var(--radius-lg)',
+},
+
+overlay: {
+  // já existente...
+  
+  // mude de: alignItems: 'center'
+  alignItems: window.innerWidth < 768 ? 'flex-end' : 'center',
 }
+}
+
+
 
 const s = {
   hero: {
