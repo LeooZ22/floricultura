@@ -143,10 +143,6 @@ const s = {
   mobileItem: { background: 'none', border: 'none', padding: '10px 0', textAlign: 'left', fontSize: '14px', color: 'var(--text-mid)', cursor: 'pointer', letterSpacing: '0.06em' },
 }
 
-import { useWindowWidth } from '../hooks/useWindowWidth'
 
-// dentro do componente:
-const width = useWindowWidth()
-const isMobile = width < 768
 
 export default Navbar

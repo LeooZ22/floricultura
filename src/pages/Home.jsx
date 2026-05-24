@@ -13,7 +13,12 @@ function Home() {
   const filtered = filter === 'Todos'
     ? products
     : products.filter(p => p.category === filter)
-
+  const styles = {
+  container: {
+    margin: '0',
+    padding: '0',
+   }
+  }
   return (
     <main>
       {/* Hero */}             
@@ -73,21 +78,6 @@ function Home() {
     </main>
   )
 
-  modal: {
-  // já existente...
-  maxWidth: '540px',
-  
-  // adicione:
-  margin: '0',           // remove margem lateral
-  borderRadius: window.innerWidth < 768 ? '16px 16px 0 0' : 'var(--radius-lg)',
-},
-
-overlay: {
-  // já existente...
-  
-  // mude de: alignItems: 'center'
-  alignItems: window.innerWidth < 768 ? 'flex-end' : 'center',
-}
 }
 
 
