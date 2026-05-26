@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { useCart } from '../contexts/CartContext'
+import { useWindowWidth } from '../hooks/useWindowWidth'
 import CartModal from './CartModal'
 import logo from '../assets/logo.png'
 
@@ -9,75 +10,99 @@ function Navbar({ currentPage, setCurrentPage }) {
   const { count } = useCart()
   const [menuOpen, setMenuOpen] = useState(false)
   const [cartOpen, setCartOpen] = useState(false)
+  const width = useWindowWidth()
+  const isMobile = width < 768
+
+  function go(page) {
+    setCurrentPage(page)
+    setMenuOpen(false)
+  }
 
   return (
     <>
       <nav style={s.nav}>
         <div style={s.inner}>
-          <button style={s.logoBtn} onClick={() => setCurrentPage('home')}>
-            <img src={logo} alt="Jana Artes Florais" style={s.logoImg} />
-            <span style={s.logoText}>Jana Artes Florais</span>
+
+          {/* Logo */}
+          <button style={s.logoBtn} onClick={() => go('home')}>
+            <img src={logo} alt="Jana Artes Florais" style={isMobile ? s.logoImgSm : s.logoImg} />
+            {!isMobile && <span style={s.logoText}>Jana Artes Florais</span>}
           </button>
 
           <div style={s.right}>
             {/* Desktop menu */}
-            <ul style={s.menu}>
-              <li>
-                <button
-                  style={{ ...s.menuItem, ...(currentPage === 'home' ? s.menuActive : {}) }}
-                  onClick={() => setCurrentPage('home')}
-                >
-                  Catálogo
-                </button>
-              </li>
-              {user ? (
-                <>
-                  <li>
-                    <button
-                      style={{ ...s.menuItem, ...(currentPage === 'admin' ? s.menuActive : {}) }}
-                      onClick={() => setCurrentPage('admin')}
-                    >
-                      Painel
-                    </button>
-                  </li>
-                  <li>
-                    <button style={s.logoutBtn} onClick={logout}>Sair</button>
-                  </li>
-                </>
-              ) : (
+            {!isMobile && (
+              <ul style={s.menu}>
                 <li>
-                  <button style={s.loginBtn} onClick={() => setCurrentPage('login')}>
-                    Área do Gestor
+                  <button
+                    style={{ ...s.menuItem, ...(currentPage === 'home' ? s.menuActive : {}) }}
+                    onClick={() => go('home')}
+                  >
+                    Catálogo
                   </button>
                 </li>
-              )}
-            </ul>
+                {user ? (
+                  <>
+                    <li>
+                      <button
+                        style={{ ...s.menuItem, ...(currentPage === 'admin' ? s.menuActive : {}) }}
+                        onClick={() => go('admin')}
+                      >
+                        Painel
+                      </button>
+                    </li>
+                    <li>
+                      <button style={s.logoutBtn} onClick={logout}>Sair</button>
+                    </li>
+                  </>
+                ) : (
+                  <li>
+                    <button style={s.loginBtn} onClick={() => go('login')}>
+                      Área do Gestor
+                    </button>
+                  </li>
+                )}
+              </ul>
+            )}
 
-            {/* Cart button */}
+            {/* Carrinho */}
             <button style={s.cartBtn} onClick={() => setCartOpen(true)}>
-              <span style={{ fontSize: '20px' }}>🛒</span>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--sage)' }}>
+                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>
+              </svg>
               {count > 0 && <span style={s.cartBadge}>{count}</span>}
             </button>
 
-            {/* Mobile hamburger */}
-            <button style={s.hamburger} onClick={() => setMenuOpen(!menuOpen)}>
-              <span style={s.bar} />
-              <span style={s.bar} />
-              <span style={s.bar} />
-            </button>
+            {/* Hamburguer mobile */}
+            {isMobile && (
+              <button style={s.hamburger} onClick={() => setMenuOpen(!menuOpen)} aria-label="menu">
+                <span style={{ ...s.bar, transform: menuOpen ? 'rotate(45deg) translate(5px, 5px)' : 'none', transition: 'transform 0.2s' }} />
+                <span style={{ ...s.bar, opacity: menuOpen ? 0 : 1, transition: 'opacity 0.2s' }} />
+                <span style={{ ...s.bar, transform: menuOpen ? 'rotate(-45deg) translate(5px, -5px)' : 'none', transition: 'transform 0.2s' }} />
+              </button>
+            )}
           </div>
         </div>
 
-        {menuOpen && (
+        {/* Mobile dropdown */}
+        {isMobile && menuOpen && (
           <div style={s.mobileMenu}>
-            <button style={s.mobileItem} onClick={() => { setCurrentPage('home'); setMenuOpen(false) }}>Catálogo</button>
+            <button style={s.mobileItem} onClick={() => go('home')}>
+              <span>🌸</span> Catálogo
+            </button>
             {user ? (
               <>
-                <button style={s.mobileItem} onClick={() => { setCurrentPage('admin'); setMenuOpen(false) }}>Painel</button>
-                <button style={s.mobileItem} onClick={() => { logout(); setMenuOpen(false) }}>Sair</button>
+                <button style={s.mobileItem} onClick={() => go('admin')}>
+                  <span>⚙️</span> Painel do Gestor
+                </button>
+                <button style={{ ...s.mobileItem, color: 'var(--blush)' }} onClick={() => { logout(); setMenuOpen(false) }}>
+                  <span>↩</span> Sair
+                </button>
               </>
             ) : (
-              <button style={s.mobileItem} onClick={() => { setCurrentPage('login'); setMenuOpen(false) }}>Área do Gestor</button>
+              <button style={s.mobileItem} onClick={() => go('login')}>
+                <span>🔑</span> Área do Gestor
+              </button>
             )}
           </div>
         )}
@@ -87,62 +112,83 @@ function Navbar({ currentPage, setCurrentPage }) {
     </>
   )
 }
-import { useWindowWidth } from '../hooks/useWindowWidth'
-
-// dentro do componente:
-const width = useWindowWidth()
-const isMobile = width < 768
 
 const s = {
   nav: {
     position: 'sticky', top: 0, zIndex: 100,
-    background: 'rgba(250, 247, 244, 0.95)',
+    background: 'rgba(250, 247, 244, 0.97)',
     backdropFilter: 'blur(12px)',
     borderBottom: '1px solid var(--border)',
   },
   inner: {
-    maxWidth: '1200px', margin: '0 auto', padding: '0 74px',
-    height: '82px', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+    maxWidth: '1200px', margin: '0 auto', padding: '0 20px',
+    height: '64px', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
   },
-  logoBtn: { background: 'none', border: 'none', display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' },
-  logoImg: { width: '68px', height: '68px', borderRadius: '50%', objectFit: 'cover' },
-  logoText: { fontFamily: 'Cormorant Garamond, serif', fontSize: '42px', fontWeight: '400', color: 'var(--sage)', letterSpacing: '0.02em' },
-  right: { display: 'flex', alignItems: 'center', gap: '8px' },
-  menu: { display: 'flex', alignItems: 'center', gap: '8px', listStyle: 'none' },
+  logoBtn: { background: 'none', border: 'none', display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' },
+  logoImg: { width: '64px', height: '64px', borderRadius: '50%', objectFit: 'cover' },
+  logoImgSm: { width: '38px', height: '58px', borderRadius: '50%', objectFit: 'cover' },
+  logoText: { fontFamily: 'Cormorant Garamond, serif', fontSize: '30px', fontWeight: '400', color: 'var(--sage)', letterSpacing: '0.02em' },
+  right: { display: 'flex', alignItems: 'center', gap: '4px' },
+  menu: { display: 'flex', alignItems: 'center', gap: '4px', listStyle: 'none' },
   menuItem: {
-    background: 'none', border: 'none', padding: '8px 16px',
-    color: 'var(--text-mid)', fontSize: '13px', letterSpacing: '0.08em',
+    background: 'none', border: 'none', padding: '8px 14px',
+    color: 'var(--text-mid)', fontSize: '12px', letterSpacing: '0.08em',
     textTransform: 'uppercase', fontWeight: '400', cursor: 'pointer',
   },
-  menuActive: { color: 'var(--sage)', borderBottom: '1.5px solid var(--sage)' },
-  loginBtn: {
-    background: 'none', border: '1px solid var(--sage)',
-    padding: '7px 18px', color: 'var(--sage)', fontSize: '12px',
-    letterSpacing: '0.1em', textTransform: 'uppercase', borderRadius: 'var(--radius)', cursor: 'pointer',
-  },
+menuActive: {
+  color: 'var(--sage)',
+  borderTop: 'none',
+  borderLeft: 'none',
+  borderRight: 'none',
+  borderBottom: '1.5px solid var(--sage)',
+},
   logoutBtn: {
     background: 'none', border: '1px solid var(--border)',
-    padding: '7px 18px', color: 'var(--text-soft)', fontSize: '12px',
+    padding: '7px 16px', color: 'var(--text-soft)', fontSize: '11px',
     letterSpacing: '0.1em', textTransform: 'uppercase', borderRadius: 'var(--radius)', cursor: 'pointer',
   },
   cartBtn: {
     position: 'relative', background: 'none', border: 'none',
-    cursor: 'pointer', padding: '8px', display: 'flex', alignItems: 'center',
+    cursor: 'pointer', padding: '10px', display: 'flex', alignItems: 'center',
   },
   cartBadge: {
-    position: 'absolute', top: '2px', right: '2px',
+    position: 'absolute', top: '4px', right: '4px',
     background: 'var(--blush)', color: '#fff',
-    fontSize: '10px', fontWeight: '700',
-    width: '18px', height: '18px', borderRadius: '50%',
+    fontSize: '9px', fontWeight: '700',
+    width: '16px', height: '16px', borderRadius: '50%',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
-    lineHeight: 1,
   },
-  hamburger: { display: 'none', flexDirection: 'column', gap: '5px', background: 'none', border: 'none', padding: '8px', cursor: 'pointer' },
+  hamburger: {
+    display: 'flex', flexDirection: 'column', gap: '5px',
+    background: 'none', border: 'none', padding: '10px', cursor: 'pointer',
+  },
   bar: { display: 'block', width: '22px', height: '1.5px', background: 'var(--text-dark)' },
-  mobileMenu: { display: 'flex', flexDirection: 'column', padding: '8px 24px 16px', borderTop: '1px solid var(--border)', gap: '4px' },
-  mobileItem: { background: 'none', border: 'none', padding: '10px 0', textAlign: 'left', fontSize: '14px', color: 'var(--text-mid)', cursor: 'pointer', letterSpacing: '0.06em' },
+  mobileMenu: {
+    display: 'flex', flexDirection: 'column',
+    padding: '8px 0 16px', borderTop: '1px solid var(--border)',
+    background: 'var(--white)',
+  },
+  menuItem: {
+    background: 'none',
+    borderTop: 'none',
+    borderLeft: 'none',
+    borderRight: 'none',
+    borderBottom: 'none',
+    padding: '8px 14px',
+    color: 'var(--text-mid)', fontSize: '12px', letterSpacing: '0.08em',
+    textTransform: 'uppercase', fontWeight: '400', cursor: 'pointer',
+  },
+  mobileItem: {
+    background: 'none',
+    borderTop: 'none',
+    borderLeft: 'none',
+    borderRight: 'none',
+    borderBottom: '1px solid var(--border)',
+    padding: '14px 24px',
+    textAlign: 'left', fontSize: '15px', color: 'var(--text-dark)',
+    cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px',
+    fontFamily: 'Cormorant Garamond, serif', fontWeight: '400',
+  },
 }
-
-
 
 export default Navbar

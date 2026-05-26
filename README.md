@@ -2,11 +2,6 @@
 
 Site/catálogo com painel de gestor para a JR Arte Floral, construído com React + Vite + Firebase.
 
-como rodar sempre que tiver uma alteração
-git add .
-git commit -m "alteracao"
-git push
-
 ---
 
 ## 🚀 Como configurar o projeto

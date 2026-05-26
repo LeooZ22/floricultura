@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useProducts } from '../hooks/useProducts'
 import { useAuth } from '../contexts/AuthContext'
+import { useWindowWidth } from '../hooks/useWindowWidth'
 
 const EMPTY = { name: '', description: '', price: '', category: '', available: true, imageUrl: '' }
 const CATEGORIES = ['Buquês', 'Arranjos', 'Cestas', 'Presentes']
@@ -8,6 +9,8 @@ const CATEGORIES = ['Buquês', 'Arranjos', 'Cestas', 'Presentes']
 function Admin({ setCurrentPage }) {
   const { products, loading, addProduct, updateProduct, deleteProduct } = useProducts()
   const { user } = useAuth()
+  const width = useWindowWidth()
+  const isMobile = width < 768
   const [modal, setModal] = useState(null) // null | 'add' | 'edit'
   const [form, setForm] = useState(EMPTY)
   const [editId, setEditId] = useState(null)
@@ -120,11 +123,41 @@ function Admin({ setCurrentPage }) {
           />
         </div>
 
-        {/* Table */}
+        {/* Table / Cards */}
         {loading ? (
           <div style={s.loading}>Carregando...</div>
         ) : filtered.length === 0 ? (
           <div style={s.empty}>Nenhum produto encontrado</div>
+        ) : isMobile ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {filtered.map(product => (
+              <div key={product.id} style={s.mobileCard}>
+                <img
+                  src={product.imageUrl || 'https://images.unsplash.com/photo-1526047932273-341f2a7631f9?w=80'}
+                  alt={product.name}
+                  style={s.mobileCardThumb}
+                />
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p style={s.productName}>{product.name}</p>
+                  <p style={{ fontSize: '12px', color: 'var(--gold)', marginTop: '2px' }}>{product.category || '—'}</p>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '6px' }}>
+                    <span style={s.priceText}>R$ {Number(product.price).toFixed(2).replace('.', ',')}</span>
+                    <span style={{
+                      fontSize: '10px', padding: '3px 8px', borderRadius: '20px', fontWeight: '500',
+                      background: product.available !== false ? '#e8f5e9' : '#fce4ec',
+                      color: product.available !== false ? '#388e3c' : '#c62828',
+                    }}>
+                      {product.available !== false ? 'Disponível' : 'Indisponível'}
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
+                    <button style={{ ...s.editBtn, flex: 1 }} onClick={() => openEdit(product)}>Editar</button>
+                    <button style={{ ...s.deleteBtn, flex: 1 }} onClick={() => setConfirmDelete(product)}>Excluir</button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         ) : (
           <div style={s.tableWrap}>
             <table style={s.table}>
@@ -171,12 +204,7 @@ function Admin({ setCurrentPage }) {
                     <td style={s.td}>
                       <div style={s.actions}>
                         <button style={s.editBtn} onClick={() => openEdit(product)}>Editar</button>
-                        <button
-                          style={s.deleteBtn}
-                          onClick={() => setConfirmDelete(product)}
-                        >
-                          Excluir
-                        </button>
+                        <button style={s.deleteBtn} onClick={() => setConfirmDelete(product)}>Excluir</button>
                       </div>
                     </td>
                   </tr>
@@ -341,7 +369,6 @@ function Field({ label, children }) {
       {children}
     </div>
   )
-  
 }
 
 const s = {
@@ -395,9 +422,21 @@ const s = {
     background: 'var(--white)',
     border: '1px solid var(--border)',
     borderRadius: 'var(--radius-lg)',
-    overflow: 'hidden',
-    overflowX: 'auto',   // já tem, mas confirme
-    WebkitOverflowScrolling: 'touch', // scroll suave no iOS
+    overflow: 'auto',
+    WebkitOverflowScrolling: 'touch',
+  },
+  mobileCard: {
+    background: 'var(--white)',
+    border: '1px solid var(--border)',
+    borderRadius: 'var(--radius-lg)',
+    padding: '14px',
+    display: 'flex',
+    gap: '14px',
+    alignItems: 'flex-start',
+  },
+  mobileCardThumb: {
+    width: '72px', height: '72px', objectFit: 'cover',
+    borderRadius: '8px', flexShrink: 0,
   },
   table: { width: '100%', borderCollapse: 'collapse' },
   th: {
@@ -452,15 +491,18 @@ const s = {
   empty: { textAlign: 'center', padding: '60px', color: 'var(--text-soft)', fontFamily: 'Cormorant Garamond, serif', fontSize: '22px' },
   overlay: {
     position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.45)',
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
-    zIndex: 200, padding: '16px',
+    display: 'flex',
+    alignItems: window.innerWidth < 768 ? 'flex-end' : 'center',
+    justifyContent: 'center',
+    zIndex: 200,
+    padding: window.innerWidth < 768 ? '0' : '16px',
   },
   modal: {
     background: 'var(--white)',
-    borderRadius: 'var(--radius-lg)',
+    borderRadius: window.innerWidth < 768 ? '20px 20px 0 0' : 'var(--radius-lg)',
     width: '100%',
-    maxWidth: '600px',
-    maxHeight: '90vh',
+    maxWidth: window.innerWidth < 768 ? '100%' : '600px',
+    maxHeight: '92vh',
     overflow: 'hidden',
     display: 'flex',
     flexDirection: 'column',
