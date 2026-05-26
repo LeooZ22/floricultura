@@ -28,7 +28,7 @@ function Login({ setCurrentPage }) {
         <div style={s.top}>
           <div style={s.icon}>✦</div>
           <h1 style={s.title}>Área do Gestor</h1>
-          <p style={s.sub}>Acesso restrito · JR Arte Floral</p>
+          <p style={s.sub}>Acesso restrito · Jana Artes Florais</p>
         </div>
 
         <form onSubmit={handleSubmit} style={s.form}>

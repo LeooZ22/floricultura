@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import {
-  collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, serverTimestamp
+  collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, query, orderBy
 } from 'firebase/firestore'
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage'
 import { db, storage } from '../firebase/config'
@@ -10,7 +10,8 @@ export function useProducts() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const unsub = onSnapshot(collection(db, 'products'), (snap) => {
+    const q = query(collection(db, 'products'), orderBy('createdAt', 'desc'))
+    const unsub = onSnapshot(q, (snap) => {
       setProducts(snap.docs.map(d => ({ id: d.id, ...d.data() })))
       setLoading(false)
     })

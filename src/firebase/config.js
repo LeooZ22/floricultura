@@ -1,4 +1,7 @@
-import { initializeApp, getApps, getApp } from 'firebase/app'
+// ⚠️  Substitua pelos seus dados do Firebase Console
+// Acesse: https://console.firebase.google.com → Seu projeto → Configurações → Seus apps
+
+import { initializeApp } from 'firebase/app'
 import { getFirestore } from 'firebase/firestore'
 import { getStorage } from 'firebase/storage'
 import { getAuth } from 'firebase/auth'
@@ -13,7 +16,7 @@ const firebaseConfig = {
   measurementId: "G-QSWNS1YD76"
 };
 
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp()
+const app = initializeApp(firebaseConfig)
 
 export const db = getFirestore(app)
 export const storage = getStorage(app)

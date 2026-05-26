@@ -3,7 +3,7 @@ import { useProducts } from '../hooks/useProducts'
 import { useAuth } from '../contexts/AuthContext'
 import { useWindowWidth } from '../hooks/useWindowWidth'
 
-const EMPTY = { name: '', description: '', price: '', category: '', available: true, imageUrl: '' }
+const EMPTY = { name: '', description: '', price: '', category: '', available: true, imageUrl: '', stock: '', isPromo: false, promoPrice: '' }
 const CATEGORIES = ['Buquês', 'Arranjos', 'Cestas', 'Presentes']
 
 function Admin({ setCurrentPage }) {
@@ -37,6 +37,9 @@ function Admin({ setCurrentPage }) {
       category: product.category || '',
       available: product.available !== false,
       imageUrl: product.imageUrl || '',
+      stock: product.stock ?? '',
+      isPromo: product.isPromo === true,
+      promoPrice: product.promoPrice || '',
     })
     setEditId(product.id)
     setImageFile(null)
@@ -85,6 +88,9 @@ function Admin({ setCurrentPage }) {
   )
   const available = products.filter(p => p.available !== false).length
   const unavailable = products.length - available
+  const onPromo = products.filter(p => p.isPromo === true).length
+  const lowStock = products.filter(p => p.stock !== undefined && p.stock !== '' && p.stock !== null && Number(p.stock) > 0 && Number(p.stock) <= 3).length
+  const outOfStock = products.filter(p => p.stock !== undefined && p.stock !== '' && p.stock !== null && Number(p.stock) <= 0).length
 
   return (
     <main style={s.page}>
@@ -105,9 +111,12 @@ function Admin({ setCurrentPage }) {
             { label: 'Total no catálogo', value: products.length },
             { label: 'Disponíveis', value: available },
             { label: 'Indisponíveis', value: unavailable },
+            { label: 'Em promoção', value: onPromo, color: '#c0392b' },
+            { label: 'Estoque baixo', value: lowStock, color: '#e07b39' },
+            { label: 'Esgotados', value: outOfStock, color: '#888' },
           ].map(stat => (
             <div key={stat.label} style={s.statCard}>
-              <span style={s.statValue}>{stat.value}</span>
+              <span style={{ ...s.statValue, color: stat.color || 'var(--text-dark)' }}>{stat.value}</span>
               <span style={s.statLabel}>{stat.label}</span>
             </div>
           ))}
@@ -140,8 +149,17 @@ function Admin({ setCurrentPage }) {
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <p style={s.productName}>{product.name}</p>
                   <p style={{ fontSize: '12px', color: 'var(--gold)', marginTop: '2px' }}>{product.category || '—'}</p>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '6px' }}>
-                    <span style={s.priceText}>R$ {Number(product.price).toFixed(2).replace('.', ',')}</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '6px', flexWrap: 'wrap' }}>
+                    {product.isPromo && product.promoPrice ? (
+                      <span style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '16px', color: '#c0392b', fontWeight: '600' }}>
+                        R$ {Number(product.promoPrice).toFixed(2).replace('.', ',')}
+                        <span style={{ fontSize: '11px', color: 'var(--text-soft)', textDecoration: 'line-through', marginLeft: '6px' }}>
+                          R$ {Number(product.price).toFixed(2).replace('.', ',')}
+                        </span>
+                      </span>
+                    ) : (
+                      <span style={s.priceText}>R$ {Number(product.price).toFixed(2).replace('.', ',')}</span>
+                    )}
                     <span style={{
                       fontSize: '10px', padding: '3px 8px', borderRadius: '20px', fontWeight: '500',
                       background: product.available !== false ? '#e8f5e9' : '#fce4ec',
@@ -149,6 +167,20 @@ function Admin({ setCurrentPage }) {
                     }}>
                       {product.available !== false ? 'Disponível' : 'Indisponível'}
                     </span>
+                    {product.stock !== undefined && product.stock !== '' && product.stock !== null && (
+                      <span style={{
+                        fontSize: '10px', padding: '3px 8px', borderRadius: '20px', fontWeight: '500',
+                        background: product.stock <= 0 ? '#f5f5f5' : product.stock <= 3 ? '#fff3e0' : '#f5f5f5',
+                        color: product.stock <= 0 ? '#888' : product.stock <= 3 ? '#e07b39' : 'var(--text-soft)',
+                      }}>
+                        {product.stock <= 0 ? 'Esgotado' : `${product.stock} un.`}
+                      </span>
+                    )}
+                    {product.isPromo && (
+                      <span style={{ fontSize: '10px', padding: '3px 8px', borderRadius: '20px', background: '#fdecea', color: '#c0392b', fontWeight: '500' }}>
+                        🏷 Promoção
+                      </span>
+                    )}
                   </div>
                   <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
                     <button style={{ ...s.editBtn, flex: 1 }} onClick={() => openEdit(product)}>Editar</button>
@@ -163,7 +195,7 @@ function Admin({ setCurrentPage }) {
             <table style={s.table}>
               <thead>
                 <tr>
-                  {['Foto', 'Nome', 'Categoria', 'Preço', 'Status', 'Ações'].map(h => (
+                  {['Foto', 'Nome', 'Preço', 'Estoque', 'Status', 'Ações'].map(h => (
                     <th key={h} style={s.th}>{h}</th>
                   ))}
                 </tr>
@@ -188,9 +220,35 @@ function Admin({ setCurrentPage }) {
                       <span style={s.categoryTag}>{product.category || '—'}</span>
                     </td>
                     <td style={s.td}>
-                      <span style={s.priceText}>
-                        R$ {Number(product.price).toFixed(2).replace('.', ',')}
-                      </span>
+                      {product.isPromo && product.promoPrice ? (
+                        <div>
+                          <span style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '13px', color: 'var(--text-soft)', textDecoration: 'line-through', display: 'block' }}>
+                            R$ {Number(product.price).toFixed(2).replace('.', ',')}
+                          </span>
+                          <span style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '18px', color: '#c0392b', fontWeight: '600' }}>
+                            R$ {Number(product.promoPrice).toFixed(2).replace('.', ',')}
+                          </span>
+                          <span style={{ fontSize: '10px', background: '#fdecea', color: '#c0392b', padding: '2px 6px', borderRadius: '10px', marginLeft: '4px' }}>
+                            -{Math.round((1 - Number(product.promoPrice)/Number(product.price))*100)}%
+                          </span>
+                        </div>
+                      ) : (
+                        <span style={s.priceText}>
+                          R$ {Number(product.price).toFixed(2).replace('.', ',')}
+                        </span>
+                      )}
+                    </td>
+                    <td style={s.td}>
+                      {product.stock !== undefined && product.stock !== '' && product.stock !== null ? (
+                        <span style={{
+                          fontSize: '13px', fontWeight: '500',
+                          color: product.stock <= 0 ? '#888' : product.stock <= 3 ? '#e07b39' : 'var(--text-dark)'
+                        }}>
+                          {product.stock <= 0 ? 'Esgotado' : `${product.stock} un.`}
+                        </span>
+                      ) : (
+                        <span style={{ fontSize: '12px', color: 'var(--text-soft)' }}>—</span>
+                      )}
                     </td>
                     <td style={s.td}>
                       <span style={{
@@ -299,6 +357,47 @@ function Admin({ setCurrentPage }) {
                       <span style={{
                         ...s.toggleThumb,
                         transform: form.available ? 'translateX(22px)' : 'translateX(2px)',
+                      }} />
+                    </button>
+                  </div>
+                </Field>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                  <Field label="Estoque (unidades)">
+                    <input
+                      style={s.input}
+                      type="number"
+                      min="0"
+                      value={form.stock}
+                      onChange={e => setForm({ ...form, stock: e.target.value })}
+                      placeholder="Ex: 10 (vazio = sem controle)"
+                    />
+                  </Field>
+                  <Field label="Preço Promocional (R$)">
+                    <input
+                      style={s.input}
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      value={form.promoPrice}
+                      onChange={e => setForm({ ...form, promoPrice: e.target.value })}
+                      placeholder="Ex: 89,90"
+                    />
+                  </Field>
+                </div>
+
+                <Field label="Promoção">
+                  <div style={s.toggleRow}>
+                    <span style={{ fontSize: '14px', color: 'var(--text-mid)' }}>
+                      {form.isPromo ? '🏷 Em promoção — tag vermelha no card' : 'Sem promoção ativa'}
+                    </span>
+                    <button
+                      style={{ ...s.toggle, background: form.isPromo ? '#c0392b' : 'var(--border)' }}
+                      onClick={() => setForm({ ...form, isPromo: !form.isPromo })}
+                    >
+                      <span style={{
+                        ...s.toggleThumb,
+                        transform: form.isPromo ? 'translateX(22px)' : 'translateX(2px)',
                       }} />
                     </button>
                   </div>

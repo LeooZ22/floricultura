@@ -20,7 +20,7 @@ function Home() {
   return (
     <main>
       {/* Hero */}
-      <section style={{ ...s.hero, padding: isMobile ? '60px 20px 10px' : '10px 24px 10px' }}>
+      <section style={{ ...s.hero, padding: isMobile ? '10px 20px 10px' : '10px 24px 10px' }}>
         <div style={s.heroInner}>
           
           <button style={s.howBtn} onClick={() => setHowOpen(true)}>
@@ -32,7 +32,7 @@ function Home() {
       </section>
 
       {/* Catalog */}
-      <section style={{ ...s.catalog, padding: isMobile ? '40px 16px 60px' : '14px 24px 80px' }}>
+      <section style={{ ...s.catalog, padding: isMobile ? '40px 16px 60px' : '64px 24px 80px' }}>
         <div style={s.catalogInner}>
           <div style={{ ...s.catalogHeader, flexDirection: isMobile ? 'column' : 'row', alignItems: isMobile ? 'flex-start' : 'flex-end' }}>
             <h2 style={{ ...s.catalogTitle, fontSize: isMobile ? '32px' : '40px' }}>Nosso Catálogo</h2>
@@ -80,9 +80,9 @@ function Home() {
 
       {/* Footer */}
       <footer style={s.footer}>
-        <p style={s.footerText}>© {new Date().getFullYear()} LCA - Sistemas fone: (66) 99977-8651 · Guiratinga, MT</p>
+        <p style={s.footerText}>© {new Date().getFullYear()} LCA Sistemas - (66) 999778651</p>
+        <p style={s.footerText}>Jana Artes Florais · Guiratinga, MT</p>     
         <p style={s.footerSub}>Feito com ♡ para celebrar a vida com flores</p>
-        <p style={s.footerSub}></p>
       </footer>
 
       {howOpen && <HowItWorksModal onClose={() => setHowOpen(false)} />}
