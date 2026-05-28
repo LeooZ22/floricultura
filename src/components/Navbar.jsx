@@ -116,7 +116,7 @@ function Navbar({ currentPage, setCurrentPage }) {
 const s = {
   nav: {
     position: 'sticky', top: 0, zIndex: 100,
-    background: 'rgba(250, 247, 244, 0.97)',
+    background: 'rgb(255, 255, 255)',
     backdropFilter: 'blur(12px)',
     borderBottom: '1px solid var(--border)',
   },

@@ -93,7 +93,7 @@ function Home() {
 const s = {
   hero: {
     position: 'relative', overflow: 'hidden',
-    background: 'linear-gradient(135deg, #cbf4bb 0%, #cbf4bb 100%)',
+    background: 'linear-gradient(135deg, #7ebe91 0%, #7ebe91 100%)',
     textAlign: 'center',
   },
   heroInner: { position: 'relative', zIndex: 1, maxWidth: '640px', margin: '0 auto' },
@@ -116,8 +116,8 @@ const s = {
   },
   heroPattern: {
     position: 'absolute', inset: 0,
-    backgroundImage: `radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.45) 0%, transparent 50%),
-                       radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.53) 0%, transparent 50%)`,
+    backgroundImage: `radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0) 0%, transparent 50%),
+                       radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0) 0%, transparent 50%)`,
     pointerEvents: 'none',
   },
   catalog: {},
