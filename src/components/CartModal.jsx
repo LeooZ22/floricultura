@@ -2,7 +2,7 @@ import { useCart } from '../contexts/CartContext'
 import { useWindowWidth } from '../hooks/useWindowWidth'
 
 // ⚠️ Coloque seu número do WhatsApp aqui (DDD + número, sem espaços)
-const WHATSAPP_NUMBER = '5566999778651'
+const WHATSAPP_NUMBER = '5566996019157'
 
 function CartModal({ onClose }) {
   const { items, removeItem, changeQty, clearCart, total, count } = useCart()

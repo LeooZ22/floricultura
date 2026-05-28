@@ -4,7 +4,7 @@ import HowItWorksModal from '../components/HowItWorksModal'
 import { useProducts } from '../hooks/useProducts'
 import { useWindowWidth } from '../hooks/useWindowWidth'
 
-const CATEGORIES = ['Todos', 'Buquês', 'Arranjos', 'Cestas', 'Presentes']
+const CATEGORIES = ['Todos', 'Buquês', 'Arranjos', 'Cestas', 'Presentes', 'Plantas', 'Decoração', 'Coroa Funebre']
 
 function Home() {
   const { products, loading } = useProducts()

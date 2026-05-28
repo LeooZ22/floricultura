@@ -125,11 +125,11 @@ const s = {
     height: '64px', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
   },
   logoBtn: { background: 'none', border: 'none', display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' },
-  logoImg: { width: '44px', height: '44px', borderRadius: '50%', objectFit: 'cover' },
+  logoImg: { width: '64px', height: '64px', borderRadius: '50%', objectFit: 'cover' },
   logoImgSm: { width: '38px', height: '38px', borderRadius: '50%', objectFit: 'cover' },
   logoText: { fontFamily: 'Cormorant Garamond, serif', fontSize: '20px', fontWeight: '400', color: 'var(--sage)', letterSpacing: '0.02em' },
   right: { display: 'flex', alignItems: 'center', gap: '4px' },
-  menu: { display: 'flex', alignItems: 'center', gap: '4px', listStyle: 'none' },
+  menu: { display: 'flex', alignItems: 'center', gap: '10px', listStyle: 'none' },
   menuItem: {
     background: 'none', border: 'none', padding: '8px 14px',
     color: 'var(--text-mid)', fontSize: '12px', letterSpacing: '0.08em',

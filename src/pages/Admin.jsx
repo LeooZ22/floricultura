@@ -4,7 +4,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { useWindowWidth } from '../hooks/useWindowWidth'
 
 const EMPTY = { name: '', description: '', price: '', category: '', available: true, imageUrl: '', stock: '', isPromo: false, promoPrice: '' }
-const CATEGORIES = ['Buquês', 'Arranjos', 'Cestas', 'Presentes']
+const CATEGORIES = ['Buquês', 'Arranjos', 'Cestas', 'Presentes', 'Plantas', 'Decoração', 'Coroa Funebre']
 
 function Admin({ setCurrentPage }) {
   const { products, loading, addProduct, updateProduct, deleteProduct } = useProducts()
