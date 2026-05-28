@@ -80,7 +80,7 @@ function Home() {
 
       {/* Footer */}
       <footer style={s.footer}>
-        <p style={s.footerText}>© {new Date().getFullYear()} LCA Sistemas - (66) 999778651</p>
+        <p style={s.footerText}>Desenvolvido por © {new Date().getFullYear()} LCA Sistemas - (66) 999778651</p>
         <p style={s.footerText}>Jana Artes Florais · Guiratinga, MT</p>     
         <p style={s.footerSub}>Feito com ♡ para celebrar a vida com flores</p>
       </footer>
@@ -93,7 +93,7 @@ function Home() {
 const s = {
   hero: {
     position: 'relative', overflow: 'hidden',
-    background: 'linear-gradient(135deg, #f5f0eb 0%, #ede4db 100%)',
+    background: 'linear-gradient(135deg, #cbf4bb 0%, #cbf4bb 100%)',
     textAlign: 'center',
   },
   heroInner: { position: 'relative', zIndex: 1, maxWidth: '640px', margin: '0 auto' },
@@ -116,8 +116,8 @@ const s = {
   },
   heroPattern: {
     position: 'absolute', inset: 0,
-    backgroundImage: `radial-gradient(circle at 20% 80%, rgba(201,148,138,0.12) 0%, transparent 50%),
-                       radial-gradient(circle at 80% 20%, rgba(107,124,110,0.10) 0%, transparent 50%)`,
+    backgroundImage: `radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.45) 0%, transparent 50%),
+                       radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.53) 0%, transparent 50%)`,
     pointerEvents: 'none',
   },
   catalog: {},
@@ -135,7 +135,7 @@ const s = {
     padding: '6px 14px', borderRadius: '20px', fontSize: '12px',
     letterSpacing: '0.04em', color: 'var(--text-soft)', cursor: 'pointer',
   },
-  filterActive: { background: 'var(--sage)', borderColor: 'var(--sage)', color: '#fff' },
+  filterActive: { background: 'var(--sage)', borderColor: 'var(--sage)', color: '#f7f7f7' },
   grid: { display: 'grid' },
   loading: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px', padding: '80px 0' },
   spinner: {
