@@ -11,12 +11,16 @@ function CartModal({ onClose }) {
 
   function handleFinalize() {
     if (items.length === 0) return
-    const lines = items.map(i =>
-      `• ${i.name} (x${i.qty}) — R$ ${(Number(i.price) * i.qty).toFixed(2).replace('.', ',')}`
-    ).join('\n')
+    const lines = items.map(i => {
+      let line = `• ${i.name} (x${i.qty}) — R$ ${(Number(i.price) * i.qty).toFixed(2).replace('.', ',')}`
+      if (i.imageUrl) {
+        line += `\n  📷 ${i.imageUrl}`
+      }
+      return line
+    }).join('\n\n')
     const msg =
       `Olá! Gostaria de fazer um pedido na Jana Artes Florais 🌸\n\n` +
-      `*Meu pedido:*\n${lines}\n\n` +
+      `*Meu pedido:*\n\n${lines}\n\n` +
       `*Total estimado: R$ ${total.toFixed(2).replace('.', ',')}*\n\n` +
       `Aguardo confirmação e instruções para pagamento!`
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank')
