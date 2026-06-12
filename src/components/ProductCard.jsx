@@ -1,4 +1,7 @@
+import { useState } from 'react'
 import { useCart } from '../contexts/CartContext'
+import { useWindowWidth } from '../hooks/useWindowWidth'
+import ImageLightbox from './ImageLightbox'
 
 function ProductCard({ product }) {
   const available = product.available !== false
@@ -10,16 +13,24 @@ function ProductCard({ product }) {
 
   const { addItem, items } = useCart()
   const inCart = items.find(i => i.id === product.id)
+  const width = useWindowWidth()
+  const isMobile = width < 768
+  const [lightboxOpen, setLightboxOpen] = useState(false)
 
   const discount = isPromo
     ? Math.round((1 - Number(product.promoPrice) / Number(product.price)) * 100)
     : 0
 
+  const imageUrl = product.imageUrl || 'https://images.unsplash.com/photo-1526047932273-341f2a7631f9?w=400'
+
   return (
     <article style={{ ...s.card, opacity: isBlocked ? 0.75 : 1 }}>
-      <div style={s.imageWrap}>
+      <div
+        style={{ ...s.imageWrap, height: isMobile ? '320px' : '240px' }}
+        onClick={() => setLightboxOpen(true)}
+      >
         <img
-          src={product.imageUrl || 'https://images.unsplash.com/photo-1526047932273-341f2a7631f9?w=400'}
+          src={imageUrl}
           alt={product.name}
           style={{ ...s.image, filter: isBlocked ? 'grayscale(60%)' : 'none' }}
         />
@@ -44,6 +55,13 @@ function ProductCard({ product }) {
         {isPromo && (
           <span style={s.promoTag}>🏷 -{discount}% OFF</span>
         )}
+
+        {/* Ícone de zoom */}
+        <span style={s.zoomIcon}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/>
+          </svg>
+        </span>
       </div>
 
       <div style={s.body}>
@@ -89,6 +107,10 @@ function ProductCard({ product }) {
           )}
         </div>
       </div>
+
+      {lightboxOpen && (
+        <ImageLightbox src={imageUrl} alt={product.name} onClose={() => setLightboxOpen(false)} />
+      )}
     </article>
   )
 }
@@ -99,7 +121,7 @@ const s = {
     overflow: 'hidden', boxShadow: 'var(--shadow-sm)',
     display: 'flex', flexDirection: 'column', transition: 'opacity 0.2s',
   },
-  imageWrap: { position: 'relative', overflow: 'hidden', height: '240px' },
+  imageWrap: { position: 'relative', overflow: 'hidden', cursor: 'pointer' },
   image: { width: '100%', height: '100%', objectFit: 'cover' },
   badge: {
     position: 'absolute', top: '10px', right: '10px',
@@ -117,6 +139,12 @@ const s = {
     background: '#c0392b', color: '#fff',
     fontSize: '11px', letterSpacing: '0.04em',
     padding: '5px 12px', borderRadius: '20px', fontWeight: '700',
+  },
+  zoomIcon: {
+    position: 'absolute', bottom: '10px', right: '10px',
+    background: 'rgba(0,0,0,0.4)', color: '#fff',
+    width: '30px', height: '30px', borderRadius: '50%',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
   },
   body: { padding: '18px', flex: 1, display: 'flex', flexDirection: 'column', gap: '6px' },
   name: { fontFamily: 'Cormorant Garamond, serif', fontSize: '20px', color: 'var(--text-dark)', fontWeight: '400' },

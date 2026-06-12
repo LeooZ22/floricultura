@@ -66,11 +66,16 @@ function Navbar({ currentPage, setCurrentPage }) {
             )}
 
             {/* Carrinho */}
-            <button style={s.cartBtn} onClick={() => setCartOpen(true)}>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--sage)' }}>
-                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>
-              </svg>
-              {count > 0 && <span style={s.cartBadge}>{count}</span>}
+            <button style={{ ...s.cartBtn, ...(count > 0 ? s.cartBtnActive : {}) }} onClick={() => setCartOpen(true)}>
+              <span style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: count > 0 ? '#fff' : 'var(--sage)' }}>
+                  <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>
+                </svg>
+                {count > 0 && <span style={s.cartBadge}>{count}</span>}
+              </span>
+              {count > 0 && (
+                <span style={s.cartBtnText}>Finalizar pedido</span>
+              )}
             </button>
 
             {/* Hamburguer mobile */}
@@ -148,7 +153,16 @@ const s = {
   },
   cartBtn: {
     position: 'relative', background: 'none', border: 'none',
-    cursor: 'pointer', padding: '10px', display: 'flex', alignItems: 'center',
+    cursor: 'pointer', padding: '10px', display: 'flex', alignItems: 'center', gap: '8px',
+    borderRadius: '20px', transition: 'all 0.25s ease',
+  },
+  cartBtnActive: {
+    background: 'var(--sage)',
+    padding: '8px 18px 8px 10px',
+  },
+  cartBtnText: {
+    color: '#fff', fontSize: '12px', fontWeight: '600',
+    letterSpacing: '0.04em', whiteSpace: 'nowrap',
   },
   cartBadge: {
     position: 'absolute', top: '4px', right: '4px',
