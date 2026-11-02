@@ -25,7 +25,7 @@ function Navbar({ currentPage, setCurrentPage }) {
 
           {/* Logo */}
           <button style={s.logoBtn} onClick={() => go('home')}>
-            <img src={logo} alt="Jana Artes Florais" style={isMobile ? s.logoImgSm : s.logoImg} />
+            {/*<img src={logo} alt="Jana Artes Florais" style={isMobile ? s.logoImgSm : s.logoImg} />*/}
             {!isMobile && <span style={s.logoText}>Jana Artes Florais</span>}
           </button>
 
