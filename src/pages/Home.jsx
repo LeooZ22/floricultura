@@ -90,7 +90,7 @@ function ProfileHeader({ isMobile, onHowOpen }) {
       {/* ── TEXTOS ── */}
       <div style={s.infoBlock}>
         <h1 style={{ ...s.shopName, fontSize: isMobile ? '22px' : '28px' }}>
-          Jana Artes Florais
+          Janaína Rita Artes Florais
         </h1>
 
         <p style={{ ...s.slogan, fontSize: isMobile ? '13px' : '14px' }}>
